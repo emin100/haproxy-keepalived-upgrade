@@ -8,7 +8,7 @@
     group: root
     mode: '0755'
   with_items:
-    - haproxy-2.4.4.tar.gz
+    - haproxy-{{ haproxy_version }}.tar.gz
 
 - name: Install packages
   ansible.builtin.package:
@@ -23,13 +23,13 @@
 
 - name: Unarchive haproxy-x.x.x.tar.gz
   ansible.builtin.unarchive:
-    src: /tmp/haproxy-2.4.4.tar.gz
+    src: /tmp/haproxy-{{ haproxy_version }}.tar.gz
     dest: /tmp/
     remote_src: yes
 
 - name: Build haproxy 'all' target with extra arguments
   make:
-    chdir: /tmp/haproxy-2.4.4
+    chdir: /tmp/haproxy-{{ haproxy_version }}
     target: all
     params:
       TARGET: linux-glibc 
@@ -42,7 +42,7 @@
 
 - name: Build haproxy 'install' target with extra arguments
   make:
-    chdir: /tmp/haproxy-2.4.4
+    chdir: /tmp/haproxy-{{ haproxy_version }}
     target: install
 
 - name: Remove haproxy package
@@ -85,5 +85,5 @@
     path: "/tmp/{{ item }}"
     state: absent
   with_items:
-    - haproxy-2.4.4
-    - haproxy-2.4.4.tar.gz
+    - haproxy-{{ haproxy_version }}
+    - haproxy-{{ haproxy_version }}.tar.gz
