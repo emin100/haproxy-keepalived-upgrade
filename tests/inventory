@@ -1,7 +1,2 @@
-[db]
-10.49.44.50
+localhost
 
-
-[all:vars]
-ansible_ssh_user=root 
-ansible_ssh_password=Axr46Pmz*?Hasan.
