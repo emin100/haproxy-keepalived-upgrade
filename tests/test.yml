@@ -2,4 +2,6 @@
 - hosts: db
   remote_user: root
   roles:
-    - trendyol.haproxy-keepalived-upgrade
+    - name: trendyol.haproxy-keepalived-upgrade
+      vars:
+        upgrade_haproxy: false

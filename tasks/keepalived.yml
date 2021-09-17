@@ -8,7 +8,7 @@
     group: root
     mode: '0755'
   with_items:
-    - keepalived-2.2.4.tar
+    - keepalived-{{ keepalived_version }}.tar
 
 - name: Install packages
   ansible.builtin.package:
@@ -22,7 +22,7 @@
 
 - name: Unarchive haproxy-x.x.x.tar.gz
   ansible.builtin.unarchive:
-    src: /tmp/keepalived-2.2.4.tar
+    src: /tmp/keepalived-{{ keepalived_version }}.tar
     dest: /tmp/
     remote_src: yes
 
@@ -47,16 +47,16 @@
 - name: Build keepalived configure
   command: ./configure
   args:
-    chdir: /tmp/keepalived-2.2.4
+    chdir: /tmp/keepalived-{{ keepalived_version }}
 
 - name: Build haproxy 'all' target with extra arguments
   make:
-    chdir: /tmp/keepalived-2.2.4
+    chdir: /tmp/keepalived-{{ keepalived_version }}
     target: all
 
 - name: Build haproxy 'install' target with extra arguments
   make:
-    chdir: /tmp/keepalived-2.2.4
+    chdir: /tmp/keepalived-{{ keepalived_version }}
     target: install
   ignore_errors: yes
 
@@ -82,5 +82,5 @@
     path: "/tmp/{{ item }}"
     state: absent
   with_items:
-    - keepalived-2.2.4
-    - keepalived-2.2.4.tar
+    - keepalived-{{ keepalived_version }}
+    - keepalived-{{ keepalived_version }}.tar
