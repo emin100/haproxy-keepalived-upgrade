@@ -1,0 +1,11 @@
+---
+# tasks file for haproxy-keepalived-upgrade
+- name: Upgrade haproxy
+  ansible.builtin.include_tasks: haproxy.yml
+  tags: haproxy
+  when: upgrade_haproxy == true
+
+- name: Upgrade keepalived
+  ansible.builtin.include_tasks: keepalived.yml
+  tags: keepalived
+  when: upgrade_keepalived == true

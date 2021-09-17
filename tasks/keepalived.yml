@@ -1,0 +1,86 @@
+---
+- name: Copy files
+  become: yes
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /tmp/{{ item }}
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - keepalived-2.2.4.tar
+
+- name: Install packages
+  ansible.builtin.package:
+    name:
+      - gcc-c++ 
+      - openssl-devel 
+      - pcre-static 
+      - pcre-devel 
+      - systemd-devel
+    state: latest
+
+- name: Unarchive haproxy-x.x.x.tar.gz
+  ansible.builtin.unarchive:
+    src: /tmp/keepalived-2.2.4.tar
+    dest: /tmp/
+    remote_src: yes
+
+- name: Copy config files
+  become: yes
+  ansible.builtin.copy:
+    src: "/etc/keepalived/{{ item }}"
+    dest: "/etc/keepalived/{{ item }}.old"
+    owner: root
+    group: root
+    remote_src: yes
+  with_items:
+    - keepalived.conf
+
+- name: Remove haproxy package
+  ansible.builtin.package:
+    name:
+      - keepalived
+    state: absent
+  ignore_errors: yes
+
+- name: Build keepalived configure
+  command: ./configure
+  args:
+    chdir: /tmp/keepalived-2.2.4
+
+- name: Build haproxy 'all' target with extra arguments
+  make:
+    chdir: /tmp/keepalived-2.2.4
+    target: all
+
+- name: Build haproxy 'install' target with extra arguments
+  make:
+    chdir: /tmp/keepalived-2.2.4
+    target: install
+  ignore_errors: yes
+
+- name: Copy config files
+  become: yes
+  ansible.builtin.copy:
+    src: "/etc/keepalived/{{ item }}.old"
+    dest: "/etc/keepalived/{{ item }}"
+    owner: root
+    group: root
+    remote_src: yes
+  with_items:
+    - keepalived.conf
+
+- name: Haproxy reload and restarted
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: keepalived
+
+- name: Ansible delete directory example
+  file:
+    path: "/tmp/{{ item }}"
+    state: absent
+  with_items:
+    - keepalived-2.2.4
+    - keepalived-2.2.4.tar

@@ -1,0 +1,6 @@
+---
+# defaults file for haproxy-keepalived-upgrade
+upgrade_haproxy: true
+upgrade_keepalived: true
+
+

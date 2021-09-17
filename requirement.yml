@@ -1,0 +1,4 @@
+- src: git@github.com:emin100/haproxy-keepalived-upgrade.git
+  scm: git
+  version: "0.0.1"
+  name: trendyol.postgresql

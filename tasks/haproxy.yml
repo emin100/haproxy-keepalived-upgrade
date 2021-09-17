@@ -1,0 +1,89 @@
+---
+- name: Copy files
+  become: yes
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /tmp/{{ item }}
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - haproxy-2.4.4.tar.gz
+
+- name: Install packages
+  ansible.builtin.package:
+    name:
+      - gcc-c++ 
+      - openssl-devel 
+      - pcre-static 
+      - pcre-devel 
+      - systemd-devel
+      - nc
+    state: latest
+
+- name: Unarchive haproxy-x.x.x.tar.gz
+  ansible.builtin.unarchive:
+    src: /tmp/haproxy-2.4.4.tar.gz
+    dest: /tmp/
+    remote_src: yes
+
+- name: Build haproxy 'all' target with extra arguments
+  make:
+    chdir: /tmp/haproxy-2.4.4
+    target: all
+    params:
+      TARGET: linux-glibc 
+      USE_PCRE: 1 
+      USE_OPENSSL: 1 
+      USE_ZLIB: 1 
+      USE_CRYPT_H: 1 
+      USE_LIBCRYPT: 1 
+      USE_SYSTEMD: 1
+
+- name: Build haproxy 'install' target with extra arguments
+  make:
+    chdir: /tmp/haproxy-2.4.4
+    target: install
+
+- name: Remove haproxy package
+  ansible.builtin.package:
+    name:
+      - haproxy
+    state: absent
+  ignore_errors: yes
+
+- name: Copy config files
+  become: yes
+  ansible.builtin.copy:
+    src: "/etc/haproxy/{{ item }}.rpmsave"
+    dest: "/etc/haproxy/{{ item }}"
+    owner: root
+    group: root
+    remote_src: yes
+  with_items:
+    - haproxy.cfg
+
+- name: Copy service files
+  become: yes
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /usr/lib/systemd/system/{{ item }}
+    owner: root
+    group: root
+    mode: '0544'
+  with_items:
+    - haproxy.service
+
+- name: Haproxy reload and restarted
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: haproxy
+
+- name: Ansible delete directory example
+  file:
+    path: "/tmp/{{ item }}"
+    state: absent
+  with_items:
+    - haproxy-2.4.4
+    - haproxy-2.4.4.tar.gz
