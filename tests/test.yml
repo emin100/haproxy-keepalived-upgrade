@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: db
   remote_user: root
   roles:
     - trendyol.haproxy-keepalived-upgrade
