@@ -45,6 +45,17 @@
     chdir: /tmp/haproxy-{{ haproxy_version }}
     target: install
 
+- name: Copy config files
+  become: yes
+  ansible.builtin.copy:
+    src: "/etc/haproxy/{{ item }}"
+    dest: "/etc/haproxy/{{ item }}.old"
+    owner: root
+    group: root
+    remote_src: yes
+  with_items:
+    - haproxy.cfg
+
 - name: Remove haproxy package
   ansible.builtin.package:
     name:
@@ -55,7 +66,7 @@
 - name: Copy config files
   become: yes
   ansible.builtin.copy:
-    src: "/etc/haproxy/{{ item }}.rpmsave"
+    src: "/etc/haproxy/{{ item }}.old"
     dest: "/etc/haproxy/{{ item }}"
     owner: root
     group: root
@@ -70,9 +81,8 @@
     dest: /usr/lib/systemd/system/{{ item }}
     owner: root
     group: root
-    mode: '0544'
   with_items:
-    - haproxy.service
+    - files/haproxy.service
 
 - name: Haproxy reload and restarted
   ansible.builtin.systemd:
