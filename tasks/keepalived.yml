@@ -2,14 +2,14 @@
 - name: keepalived stat
   local_action:
     module: stat
-    path: ./files/keepalived-{{ keepalived_version }}.tar.gz
+    path: ../files/keepalived-{{ keepalived_version }}.tar.gz
   register: st
 
 - name: Download keepalived
   local_action:
     module: get_url
     url: "https://keepalived.org/software/keepalived-{{ keepalived_version }}.tar.gz"
-    dest: ./files/keepalived-{{ keepalived_version }}.tar.gz
+    dest: ../files/keepalived-{{ keepalived_version }}.tar.gz
   when: st.stat.exists is false
 
 - name: Copy files
