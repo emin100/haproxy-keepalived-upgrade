@@ -50,6 +50,11 @@
     dest: /tmp/
     remote_src: yes
 
+- name: Recursively remove directory
+  ansible.builtin.file:
+    path: /usr/local/bin/genhash
+    state: absent
+
 - name: Copy config files
   become: yes
   ansible.builtin.copy:
