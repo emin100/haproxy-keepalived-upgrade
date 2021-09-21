@@ -1,4 +1,17 @@
 ---
+  - name: copy a file
+    local_action:
+      module: stat
+      path: files/haproxy-{{ haproxy_version }}.tar.gz
+    register: st
+
+  - name: copy a file
+    local_action:
+      module: get_url
+      url: "https://www.haproxy.org/download/{{ haproxy_version.split('.')[:2]|join('.') }}/src/haproxy-{{ haproxy_version }}.tar.gz"
+      dest: files/
+    when: st.stat.exists is false
+
 - name: Copy files
   become: yes
   ansible.builtin.copy:
@@ -95,7 +108,7 @@
     daemon_reload: yes
     name: haproxy
 
-- name: Ansible delete directory example
+- name: Delete install files/folders
   file:
     path: "/tmp/{{ item }}"
     state: absent

@@ -1,4 +1,17 @@
 ---
+- name: copy a file
+  local_action:
+    module: stat
+    path: files/keepalived-{{ keepalived_version }}.tar.gz
+  register: st
+
+- name: copy a file
+  local_action:
+    module: get_url
+    url: "https://keepalived.org/software/keepalived-{{ keepalived_version }}.tar.gz"
+    dest: files/
+  when: st.stat.exists is false
+
 - name: Copy files
   become: yes
   ansible.builtin.copy:
@@ -76,13 +89,13 @@
   with_items:
     - keepalived.conf
 
-- name: Haproxy reload and restarted
+- name: Keepalived reload and restarted
   ansible.builtin.systemd:
     state: restarted
     daemon_reload: yes
     name: keepalived
 
-- name: Ansible delete directory example
+- name: Delete install files/folders
   file:
     path: "/tmp/{{ item }}"
     state: absent
