@@ -4,5 +4,6 @@ upgrade_haproxy: true
 upgrade_keepalived: true
 haproxy_version: 2.4.4
 keepalived_version: 2.2.4
+tmp_directory: /tmp/haproxy-keepalived-upgrade
 
 
