@@ -21,6 +21,11 @@
       - nc
     state: latest
 
+- name: Haproxy stopped
+  ansible.builtin.systemd:
+    state: stopped
+    name: haproxy
+
 - name: Unarchive haproxy-x.x.x.tar.gz
   ansible.builtin.unarchive:
     src: /tmp/haproxy-{{ haproxy_version }}.tar.gz
