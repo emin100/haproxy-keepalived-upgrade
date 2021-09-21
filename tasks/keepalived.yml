@@ -50,7 +50,7 @@
     dest: /tmp/
     remote_src: yes
 
-- name: Recursively remove directory
+- name: Remove file
   ansible.builtin.file:
     path: /usr/local/bin/genhash
     state: absent
