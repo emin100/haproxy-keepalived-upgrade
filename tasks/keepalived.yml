@@ -46,7 +46,7 @@
 
 - name: Unarchive haproxy-x.x.x.tar.gz
   ansible.builtin.unarchive:
-    src: /tmp/keepalived-{{ keepalived_version }}.tar
+    src: /tmp/keepalived-{{ keepalived_version }}.tar.gz
     dest: /tmp/
     remote_src: yes
 
