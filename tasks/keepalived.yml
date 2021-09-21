@@ -9,7 +9,7 @@
   local_action:
     module: get_url
     url: "https://keepalived.org/software/keepalived-{{ keepalived_version }}.tar.gz"
-    dest: files/
+    dest: files/keepalived-{{ keepalived_version }}.tar.gz
   when: st.stat.exists is false
 
 - name: Copy files
@@ -21,7 +21,7 @@
     group: root
     mode: '0755'
   with_items:
-    - keepalived-{{ keepalived_version }}.tar
+    - keepalived-{{ keepalived_version }}.tar.gz
 
 - name: Install packages
   ansible.builtin.package:
@@ -101,4 +101,4 @@
     state: absent
   with_items:
     - keepalived-{{ keepalived_version }}
-    - keepalived-{{ keepalived_version }}.tar
+    - keepalived-{{ keepalived_version }}.tar.gz

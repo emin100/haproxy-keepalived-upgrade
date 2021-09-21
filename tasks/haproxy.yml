@@ -9,7 +9,7 @@
     local_action:
       module: get_url
       url: "https://www.haproxy.org/download/{{ haproxy_version.split('.')[:2]|join('.') }}/src/haproxy-{{ haproxy_version }}.tar.gz"
-      dest: files/
+      dest: files/haproxy-{{ haproxy_version }}.tar.gz
     when: st.stat.exists is false
 
 - name: Copy files
