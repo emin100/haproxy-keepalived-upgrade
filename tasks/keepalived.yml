@@ -20,6 +20,11 @@
       - systemd-devel
     state: latest
 
+- name: Keepalived stopped
+  ansible.builtin.systemd:
+    state: stopped
+    name: keepalived
+
 - name: Unarchive haproxy-x.x.x.tar.gz
   ansible.builtin.unarchive:
     src: /tmp/keepalived-{{ keepalived_version }}.tar
