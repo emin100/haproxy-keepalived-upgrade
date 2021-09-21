@@ -1,21 +1,26 @@
 ---
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: {{ tmp_directory }}
+    state: directory
+
 - name: keepalived stat
   local_action:
     module: stat
-    path: ../files/keepalived-{{ keepalived_version }}.tar.gz
+    path: "{{ tmp_directory }}/keepalived-{{ keepalived_version }}.tar.gz"
   register: st
 
 - name: Download keepalived
   local_action:
     module: get_url
     url: "https://keepalived.org/software/keepalived-{{ keepalived_version }}.tar.gz"
-    dest: ../files/keepalived-{{ keepalived_version }}.tar.gz
+    dest: "{{ tmp_directory }}/keepalived-{{ keepalived_version }}.tar.gz"
   when: st.stat.exists is false
 
 - name: Copy files
   become: yes
   ansible.builtin.copy:
-    src: "{{ item }}"
+    src: "{{ tmp_directory }}/{{ item }}"
     dest: /tmp/{{ item }}
     owner: root
     group: root
