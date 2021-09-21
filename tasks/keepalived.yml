@@ -1,11 +1,11 @@
 ---
-- name: copy a file
+- name: keepalived stat
   local_action:
     module: stat
     path: files/keepalived-{{ keepalived_version }}.tar.gz
   register: st
 
-- name: copy a file
+- name: Download keepalived
   local_action:
     module: get_url
     url: "https://keepalived.org/software/keepalived-{{ keepalived_version }}.tar.gz"

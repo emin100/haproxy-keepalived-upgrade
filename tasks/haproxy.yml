@@ -1,11 +1,11 @@
 ---
-  - name: copy a file
+  - name: haproxy stat
     local_action:
       module: stat
       path: files/haproxy-{{ haproxy_version }}.tar.gz
     register: st
 
-  - name: copy a file
+  - name: download haproxy
     local_action:
       module: get_url
       url: "https://www.haproxy.org/download/{{ haproxy_version.split('.')[:2]|join('.') }}/src/haproxy-{{ haproxy_version }}.tar.gz"
