@@ -1,21 +1,26 @@
 ---
+  - name: Create a directory if it does not exist
+    ansible.builtin.file:
+      path: {{ tmp_directory }}
+      state: directory
+
   - name: haproxy stat
     local_action:
       module: stat
-      path: ../files/haproxy-{{ haproxy_version }}.tar.gz
+      path: "{{ tmp_directory }}haproxy-{{ haproxy_version }}.tar.gz"
     register: st
 
   - name: download haproxy
     local_action:
       module: get_url
       url: "https://www.haproxy.org/download/{{ haproxy_version.split('.')[:2]|join('.') }}/src/haproxy-{{ haproxy_version }}.tar.gz"
-      dest: ../files/haproxy-{{ haproxy_version }}.tar.gz
+      dest: "{{ tmp_directory }}/haproxy-{{ haproxy_version }}.tar.gz"
     when: st.stat.exists is false
 
 - name: Copy files
   become: yes
   ansible.builtin.copy:
-    src: "../files/{{ item }}"
+    src: "{{ tmp_directory }}/{{ item }}"
     dest: /tmp/{{ item }}
     owner: root
     group: root
