@@ -38,6 +38,15 @@
       - pcre-devel 
       - systemd-devel
     state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Install packages
+  ansible.builtin.package:
+    name:
+      - build-essential 
+      - libssl-dev
+    state: latest
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: Keepalived stopped
   ansible.builtin.systemd:
