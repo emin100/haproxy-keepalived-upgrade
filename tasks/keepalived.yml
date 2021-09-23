@@ -29,7 +29,7 @@
   with_items:
     - keepalived-{{ keepalived_version }}.tar.gz
 
-- name: Install packages
+- name: RHEL install packages
   become: true
   ansible.builtin.package:
     name:
@@ -41,12 +41,13 @@
     state: latest
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
-- name: Install packages
+- name: Debian install packages
   become: true
   apt:
     pkg:
       - build-essential 
       - libssl-dev
+      - libsystemd-dev
     update_cache: yes
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
@@ -115,6 +116,19 @@
   with_items:
     - keepalived.conf
   ignore_errors: yes
+
+# - name: Create a directory if it does not exist
+#   ansible.builtin.file:
+#     path: "/etc/keepalived"
+#     state: directory
+#   ignore_errors: yes
+
+# - name: Create a directory if it does not exist
+#   ansible.builtin.file:
+#     path: "/tmp/keepalived-{{ keepalived_version }}/keepalived/etc/init.d/keepalived"
+#     state: file
+#     /etc/init.d/keepalived
+#   ignore_errors: yes
 
 - name: Keepalived reload and restarted
   become: yes
