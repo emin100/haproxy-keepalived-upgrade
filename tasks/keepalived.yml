@@ -77,7 +77,8 @@
     remote_src: yes
   with_items:
     - keepalived.conf
-
+  ignore_errors: yes
+  
 - name: Remove haproxy package
   ansible.builtin.package:
     name:
