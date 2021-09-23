@@ -94,6 +94,7 @@
     chdir: /tmp/keepalived-{{ keepalived_version }}
 
 - name: Build haproxy 'all' target with extra arguments
+  become: true
   make:
     chdir: /tmp/keepalived-{{ keepalived_version }}
     target: all
