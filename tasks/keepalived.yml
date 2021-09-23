@@ -122,7 +122,7 @@
   become: yes
   ansible.builtin.copy:
     src: "/tmp/keepalived-2.2.4/keepalived/{{ item }}"
-    dest: "/etc/init.d/{{ item }}"
+    dest: "/usr/lib/systemd/system/{{ item }}"
     owner: root
     group: root
     remote_src: yes
