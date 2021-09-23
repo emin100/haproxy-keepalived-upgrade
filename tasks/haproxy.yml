@@ -29,7 +29,8 @@
   with_items:
     - haproxy-{{ haproxy_version }}.tar.gz
 
-- name: Install packages
+- name: RHEL install packages
+  become: true
   ansible.builtin.package:
     name:
       - gcc-c++ 
@@ -39,11 +40,25 @@
       - systemd-devel
       - nc
     state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Debian install packages
+  become: true
+  apt:
+    pkg:
+      - build-essential 
+      - libssl-dev
+      - libsystemd-dev
+      - nc
+    update_cache: yes
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: Haproxy stopped
+  become: yes
   ansible.builtin.systemd:
     state: stopped
     name: haproxy
+  ignore_errors: yes
 
 - name: Unarchive haproxy-x.x.x.tar.gz
   ansible.builtin.unarchive:
@@ -65,6 +80,7 @@
       USE_SYSTEMD: 1
 
 - name: Build haproxy 'install' target with extra arguments
+  become: yes
   make:
     chdir: /tmp/haproxy-{{ haproxy_version }}
     target: install
@@ -79,8 +95,10 @@
     remote_src: yes
   with_items:
     - haproxy.cfg
+  ignore_errors: yes
 
 - name: Remove haproxy package
+  become: yes
   ansible.builtin.package:
     name:
       - haproxy
@@ -97,6 +115,7 @@
     remote_src: yes
   with_items:
     - haproxy.cfg
+  ignore_errors: yes
 
 - name: Copy service files
   become: yes
@@ -109,12 +128,14 @@
     - haproxy.service
 
 - name: Haproxy reload and restarted
+  become: yes
   ansible.builtin.systemd:
     state: restarted
     daemon_reload: yes
     name: haproxy
 
 - name: Delete install files/folders
+  become: yes
   file:
     path: "/tmp/{{ item }}"
     state: absent
