@@ -97,6 +97,7 @@
     target: all
 
 - name: Build haproxy 'install' target with extra arguments
+  become: true
   make:
     chdir: /tmp/keepalived-{{ keepalived_version }}
     target: install
