@@ -66,7 +66,7 @@
 - name: Remove file
   become: yes
   ansible.builtin.file:
-    path: /usr/local/bin/genhash
+    path: /bin/genhash
     state: absent
 
 - name: Copy config files
