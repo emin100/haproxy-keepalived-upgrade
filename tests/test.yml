@@ -1,11 +1,10 @@
 ---
 - hosts: db
-  remote_user: root
   roles:
-    - name: trendyol.haproxy-keepalived-upgrade
+    - name: trendyol.haproxy-keepalived
       vars:
         haproxy: true
         keepalived: true
         haproxy_version: 2.4.4
         keepalived_version: 2.2.4
-        tmp_directory: /tmp/haproxy-keepalived-upgrade
+        tmp_directory: /tmp/haproxy-keepalived
