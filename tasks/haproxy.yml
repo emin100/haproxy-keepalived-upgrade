@@ -128,6 +128,20 @@
   with_items:
     - haproxy.service
 
+- name: Create a directory if it does not exist
+  become: yes
+  ansible.builtin.file:
+    path: "/etc/haproxy"
+    state: directory
+  ignore_errors: yes
+
+- name: Create a file if it does not exist
+  become: yes
+  ansible.builtin.file:
+    path: "/etc/haproxy/haproxy.cfg"
+    state: file
+  ignore_errors: yes
+
 - name: Haproxy reload and restarted
   become: yes
   ansible.builtin.systemd:
