@@ -87,6 +87,13 @@
     chdir: /tmp/haproxy-{{ haproxy_version }}
     target: install
 
+- name: Create a directory if it does not exist
+  become: yes
+  ansible.builtin.file:
+    path: "/etc/haproxy"
+    state: directory
+  ignore_errors: yes
+
 - name: Copy config files
   become: yes
   ansible.builtin.copy:
@@ -97,7 +104,19 @@
     remote_src: yes
   with_items:
     - haproxy.cfg
-  ignore_errors: yes
+  ignore_errors: yes≈
+
+- name: Copy service files
+  become: yes
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: /etc/haproxy/{{ item }}
+    owner: root
+    group: root
+  with_items:
+    - haproxy.cfg
+    - master.sh
+    - replica.sh
 
 - name: Remove haproxy package
   become: yes
@@ -128,25 +147,6 @@
     group: root
   with_items:
     - haproxy.service
-
-- name: Create a directory if it does not exist
-  become: yes
-  ansible.builtin.file:
-    path: "/etc/haproxy"
-    state: directory
-  ignore_errors: yes
-
-- name: Copy service files
-  become: yes
-  ansible.builtin.copy:
-    src: "files/{{ item }}"
-    dest: /etc/haproxy/{{ item }}
-    owner: root
-    group: root
-  with_items:
-    - haproxy.cfg
-    - master.sh
-    - replica.sh
 
 - name: Haproxy reload and restarted
   become: yes
