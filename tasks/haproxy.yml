@@ -104,7 +104,7 @@
     remote_src: yes
   with_items:
     - haproxy.cfg
-  ignore_errors: yes≈
+  ignore_errors: yes
 
 - name: Copy service files
   become: yes

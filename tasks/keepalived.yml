@@ -70,6 +70,12 @@
     path: /bin/genhash
     state: absent
 
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: "/etc/keepalived"
+    state: directory
+  ignore_errors: yes
+
 - name: Copy config files
   become: yes
   ansible.builtin.copy:
@@ -81,6 +87,16 @@
   with_items:
     - keepalived.conf
   ignore_errors: yes
+
+- name: Copy service files
+  become: yes
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: /etc/keepalived/{{ item }}
+    owner: root
+    group: root
+  with_items:
+    - keepalived.conf
   
 - name: Remove haproxy package
   ansible.builtin.package:
@@ -130,19 +146,6 @@
   with_items:
     - keepalived.service
   ignore_errors: yes
-
-# - name: Create a directory if it does not exist
-#   ansible.builtin.file:
-#     path: "/etc/keepalived"
-#     state: directory
-#   ignore_errors: yes
-
-# - name: Create a directory if it does not exist
-#   ansible.builtin.file:
-#     path: "/tmp/keepalived-{{ keepalived_version }}/keepalived/etc/init.d/keepalived"
-#     state: file
-#     /etc/init.d/keepalived
-#   ignore_errors: yes
 
 - name: Keepalived reload and restarted
   become: yes
