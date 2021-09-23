@@ -121,13 +121,13 @@
 - name: Copy config files
   become: yes
   ansible.builtin.copy:
-    src: "/tmp/keepalived-2.2.4/keepalived/etc/init.d/{{ item }}"
-    dest: "/etc/keepalived/{{ item }}"
+    src: "/tmp/keepalived-2.2.4/keepalived/{{ item }}"
+    dest: "/etc/init.d/{{ item }}"
     owner: root
     group: root
     remote_src: yes
   with_items:
-    - keepalived
+    - keepalived.service
   ignore_errors: yes
 
 # - name: Create a directory if it does not exist
