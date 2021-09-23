@@ -54,6 +54,7 @@
   ansible.builtin.systemd:
     state: stopped
     name: keepalived
+  ignore_errors: yes
 
 - name: Unarchive haproxy-x.x.x.tar.gz
   ansible.builtin.unarchive:
