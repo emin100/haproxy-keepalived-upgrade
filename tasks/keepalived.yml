@@ -52,6 +52,7 @@
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: Keepalived stopped
+  become: yes
   ansible.builtin.systemd:
     state: stopped
     name: keepalived
@@ -151,6 +152,7 @@
     name: keepalived
 
 - name: Delete install files/folders
+  become: true
   file:
     path: "/tmp/{{ item }}"
     state: absent
