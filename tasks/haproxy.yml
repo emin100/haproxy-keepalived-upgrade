@@ -79,7 +79,7 @@
       USE_CRYPT_H: 1 
       USE_LIBCRYPT: 1 
       USE_SYSTEMD: 1
-      EXTRA_OBJS: "contrib/prometheus-exporter/service-prometheus.o"
+      USE_PROMEX: 1
 
 - name: Build haproxy 'install' target with extra arguments
   become: yes
