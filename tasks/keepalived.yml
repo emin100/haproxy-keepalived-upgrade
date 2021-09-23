@@ -43,11 +43,11 @@
 
 - name: Install packages
   become: true
-  ansible.builtin.package:
-    name:
+  apt:
+    pkg:
       - build-essential 
       - libssl-dev
-    state: latest
+    update_cache: yes
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: Keepalived stopped
