@@ -30,6 +30,7 @@
     - keepalived-{{ keepalived_version }}.tar.gz
 
 - name: Install packages
+  become: true
   ansible.builtin.package:
     name:
       - gcc-c++ 
@@ -41,6 +42,7 @@
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Install packages
+  become: true
   ansible.builtin.package:
     name:
       - build-essential 
