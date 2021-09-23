@@ -117,6 +117,7 @@
   ignore_errors: yes
 
 - name: Keepalived reload and restarted
+  become: yes
   ansible.builtin.systemd:
     state: restarted
     daemon_reload: yes
