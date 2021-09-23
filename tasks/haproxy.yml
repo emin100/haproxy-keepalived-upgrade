@@ -135,12 +135,17 @@
     state: directory
   ignore_errors: yes
 
-- name: Create a file if it does not exist
+- name: Copy service files
   become: yes
-  ansible.builtin.file:
-    path: "/etc/haproxy/haproxy.cfg"
-    state: touch
-  ignore_errors: yes
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: /etc/haproxy/{{ item }}
+    owner: root
+    group: root
+  with_items:
+    - haproxy.cfg
+    - master.sh
+    - replica.sh
 
 - name: Haproxy reload and restarted
   become: yes
