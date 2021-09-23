@@ -63,6 +63,7 @@
     remote_src: yes
 
 - name: Remove file
+  become: yes
   ansible.builtin.file:
     path: /usr/local/bin/genhash
     state: absent
@@ -113,6 +114,7 @@
     remote_src: yes
   with_items:
     - keepalived.conf
+  ignore_errors: yes
 
 - name: Keepalived reload and restarted
   ansible.builtin.systemd:
