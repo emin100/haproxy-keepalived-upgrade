@@ -139,7 +139,7 @@
   become: yes
   ansible.builtin.file:
     path: "/etc/haproxy/haproxy.cfg"
-    state: file
+    state: touch
   ignore_errors: yes
 
 - name: Haproxy reload and restarted
