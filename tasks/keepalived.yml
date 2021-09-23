@@ -89,7 +89,7 @@
   ignore_errors: yes
 
 - name: Build keepalived configure
-  command: ./configure
+  command: ./configure --prefix=/
   args:
     chdir: /tmp/keepalived-{{ keepalived_version }}
 
@@ -115,6 +115,18 @@
     remote_src: yes
   with_items:
     - keepalived.conf
+  ignore_errors: yes
+
+- name: Copy config files
+  become: yes
+  ansible.builtin.copy:
+    src: "/tmp/keepalived-2.2.4/keepalived/etc/init.d/{{ item }}"
+    dest: "/etc/keepalived/{{ item }}"
+    owner: root
+    group: root
+    remote_src: yes
+  with_items:
+    - keepalived
   ignore_errors: yes
 
 # - name: Create a directory if it does not exist
